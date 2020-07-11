@@ -1,1 +1,3 @@
-# unnamed_twitter_project
+# Unnamed Twitter Project
+
+An ongoing exploration of my Twitter data.

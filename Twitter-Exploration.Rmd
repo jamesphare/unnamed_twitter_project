@@ -1,0 +1,66 @@
+---
+title: "Unnamed Twitter Project"
+author: "James Hare"
+date: "7/11/2020"
+output:
+  github_document: default
+---
+
+```{r setup}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+library(rtweet)
+```
+
+I wonder who my favorite tweeters are.
+
+```{r favorites}
+#This is the code to get favorites, but it shouldn't run automatically due to
+#rate limits
+#
+#james <- get_favorites("ProsccoSocialst", n = 3000)
+#write_as_csv(james, "data/james.csv")
+
+james <- read_csv("data/james.csv")
+
+my_fav_tweeters <- james %>%
+        group_by(screen_name) %>%
+        tally() %>%
+        arrange(desc(n)) %>%
+        slice(1:10)
+
+ggplot(my_fav_tweeters) +
+        geom_col(mapping = aes(reorder(screen_name, n), n)) +
+        coord_flip() +
+        labs(title = "My Favorite Tweeters",
+             x = "Screen Name",
+             y = "Number of Favorites")
+```
+
+I wonder who their favorites are.
+
+```{r favs_favorites}
+
+#Code that shouldn't run automatically due to rate limits
+#
+#my_favs_favs <- get_favorites(my_fav_tweeters$screen_name, n = 300)
+#write_as_csv(my_favs_favs, "data/my_favs_favs.csv")
+
+my_favs_favs <- read_csv("data/my_favs_favs.csv")
+
+my_favs_fav_tweeters <- my_favs_favs %>%
+        group_by(screen_name) %>%
+        tally() %>%
+        arrange(desc(n)) %>%
+        slice(1:10)
+
+ggplot(my_favs_fav_tweeters) +
+        geom_col(mapping = aes(reorder(screen_name, n), n)) +
+        coord_flip() +
+        labs(title = "My Favorite Tweeters' Favorite Tweeters",
+             x = "Screen Name",
+             y = "Number of Favorites")
+```
+
+I'm going to go ahead and follow anyone on this list who I'm not already following.
+
