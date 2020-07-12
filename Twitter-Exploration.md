@@ -84,9 +84,7 @@ james <- read_csv("data/james.csv")
 
 ``` r
 my_fav_tweeters <- james %>%
-        group_by(screen_name) %>%
-        tally() %>%
-        arrange(desc(n)) %>%
+        count(screen_name, sort = TRUE) %>%
         slice(1:10)
 
 ggplot(my_fav_tweeters) +
@@ -144,9 +142,7 @@ my_favs_favs <- read_csv("data/my_favs_favs.csv")
 
 ``` r
 my_favs_fav_tweeters <- my_favs_favs %>%
-        group_by(screen_name) %>%
-        tally() %>%
-        arrange(desc(n)) %>%
+        count(screen_name, sort = TRUE) %>%
         slice(1:10)
 
 ggplot(my_favs_fav_tweeters) +
@@ -182,8 +178,9 @@ tidy_james_favs <- james %>%
 ``` r
 word_count <- tidy_james_favs %>%
         filter(!str_detect(word, "^@")) %>%
-        count(word) %>%
-        arrange(desc(n)) %>%
+        count(word, sort = TRUE) %>%
+        #"people" shoes up way to often and doesn't tell us much
+        filter(word != "people") %>%
         slice(1:20)
 
 ggplot(word_count) +
@@ -195,3 +192,109 @@ ggplot(word_count) +
 ```
 
 ![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+
+I guess I’m interested in Left politics and the uprising against racist
+police violence.
+
+Let’s see what words my favorites are favoriting.
+
+``` r
+tidy_favs_favs <- my_favs_favs %>%
+        filter(!str_detect(text, "^RT")) %>%
+        mutate(text = str_remove_all(text, remove_reg)) %>%
+        unnest_tokens(word, text, token = "tweets") %>%
+        filter(
+                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+                str_detect(word, "[a-z]")
+        )
+```
+
+    ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
+
+``` r
+favs_word_count <- tidy_favs_favs %>%
+        filter(!str_detect(word, "^@")) %>%
+        count(word, sort = TRUE) %>%
+        #"people" shoes up way to often and doesn't tell us much
+        filter(word != "people") %>%
+        slice(1:20)
+
+ggplot(favs_word_count) +
+        geom_col(mapping = aes(reorder(word, n), n)) +
+        coord_flip() +
+        labs(title = "My Favorites' Favorite Words",
+             x = "Word",
+             y = "Number of Occurences")
+```
+
+![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+
+A lot of overalap, but they seem more interested in that whole cancel
+culture letter than I am.
+
+Now let’s take a look at the words that I use in my own tweets.
+
+``` r
+#james_tweets <- get_timeline("ProsccoSocialst", n = 3000)
+#write_as_csv(james_tweets, "data/james_tweets.csv")
+james_tweets <- read_csv("data/james_tweets.csv")
+```
+
+    ## Parsed with column specification:
+    ## cols(
+    ##   .default = col_character(),
+    ##   created_at = col_datetime(format = ""),
+    ##   display_text_width = col_double(),
+    ##   is_quote = col_logical(),
+    ##   is_retweet = col_logical(),
+    ##   favorite_count = col_double(),
+    ##   retweet_count = col_double(),
+    ##   quote_count = col_logical(),
+    ##   reply_count = col_logical(),
+    ##   symbols = col_logical(),
+    ##   ext_media_type = col_logical(),
+    ##   quoted_created_at = col_datetime(format = ""),
+    ##   quoted_favorite_count = col_double(),
+    ##   quoted_retweet_count = col_double(),
+    ##   quoted_followers_count = col_double(),
+    ##   quoted_friends_count = col_double(),
+    ##   quoted_statuses_count = col_double(),
+    ##   quoted_verified = col_logical(),
+    ##   retweet_created_at = col_datetime(format = ""),
+    ##   retweet_favorite_count = col_double(),
+    ##   retweet_retweet_count = col_double()
+    ##   # ... with 22 more columns
+    ## )
+
+    ## See spec(...) for full column specifications.
+
+``` r
+tidy_james_tweets <- james_tweets %>%
+        filter(!str_detect(text, "^RT")) %>%
+        mutate(text = str_remove_all(text, remove_reg)) %>%
+        unnest_tokens(word, text, token = "tweets") %>%
+        filter(
+                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+                str_detect(word, "[a-z]")
+        )
+```
+
+    ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
+
+``` r
+tweets_word_count <- tidy_james_tweets %>%
+        filter(!str_detect(word, "^@")) %>%
+        count(word, sort = TRUE) %>%
+        #"people" shoes up way to often and doesn't tell us much
+        filter(word != "people") %>%
+        slice(1:20)
+
+ggplot(tweets_word_count) +
+        geom_col(mapping = aes(reorder(word, n), n)) +
+        coord_flip() +
+        labs(title = "My Most Commonly Used Words",
+             x = "Word",
+             y = "Number of Occurences")
+```
+
+![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
