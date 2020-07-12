@@ -11,7 +11,7 @@ library(tidyverse)
     ## ── Attaching packages ─────────────────────────────────────────────────────────────────────────────── tidyverse 1.3.0 ──
 
     ## ✓ ggplot2 3.3.2     ✓ purrr   0.3.4
-    ## ✓ tibble  3.0.2     ✓ dplyr   1.0.0
+    ## ✓ tibble  3.0.3     ✓ dplyr   1.0.0
     ## ✓ tidyr   1.1.0     ✓ stringr 1.4.0
     ## ✓ readr   1.3.1     ✓ forcats 0.5.0
 
@@ -89,14 +89,6 @@ my_fav_tweeters <- james %>%
 head(my_fav_tweeters, 10)
 ```
 
-    ## Warning: `...` is not empty.
-    ## 
-    ## We detected these problematic arguments:
-    ## * `needs_dots`
-    ## 
-    ## These dots only exist to allow future extensions and should be empty.
-    ## Did you misspecify an argument?
-
     ## # A tibble: 10 x 2
     ##    screen_name         n
     ##    <chr>           <int>
@@ -161,14 +153,6 @@ my_favs_fav_tweeters <- my_favs_favs %>%
 head(my_favs_fav_tweeters, 10)
 ```
 
-    ## Warning: `...` is not empty.
-    ## 
-    ## We detected these problematic arguments:
-    ## * `needs_dots`
-    ## 
-    ## These dots only exist to allow future extensions and should be empty.
-    ## Did you misspecify an argument?
-
     ## # A tibble: 10 x 2
     ##    screen_name         n
     ##    <chr>           <int>
@@ -212,14 +196,6 @@ word_count <- tidy_james_favs %>%
 
 head(word_count, 20)
 ```
-
-    ## Warning: `...` is not empty.
-    ## 
-    ## We detected these problematic arguments:
-    ## * `needs_dots`
-    ## 
-    ## These dots only exist to allow future extensions and should be empty.
-    ## Did you misspecify an argument?
 
     ## # A tibble: 20 x 2
     ##    word        n
@@ -272,14 +248,6 @@ favs_word_count <- tidy_favs_favs %>%
 
 head(favs_word_count, 20)
 ```
-
-    ## Warning: `...` is not empty.
-    ## 
-    ## We detected these problematic arguments:
-    ## * `needs_dots`
-    ## 
-    ## These dots only exist to allow future extensions and should be empty.
-    ## Did you misspecify an argument?
 
     ## # A tibble: 20 x 2
     ##    word        n
@@ -366,14 +334,6 @@ tweets_word_count <- tidy_james_tweets %>%
 
 head(tweets_word_count, 20)
 ```
-
-    ## Warning: `...` is not empty.
-    ## 
-    ## We detected these problematic arguments:
-    ## * `needs_dots`
-    ## 
-    ## These dots only exist to allow future extensions and should be empty.
-    ## Did you misspecify an argument?
 
     ## # A tibble: 20 x 2
     ##    word           n
