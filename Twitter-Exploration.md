@@ -30,6 +30,18 @@ library(rtweet)
     ## 
     ##     flatten
 
+``` r
+library(tidytext)
+library(lubridate)
+```
+
+    ## 
+    ## Attaching package: 'lubridate'
+
+    ## The following objects are masked from 'package:base':
+    ## 
+    ##     date, intersect, setdiff, union
+
 I wonder who my favorite tweeters are.
 
 ``` r
@@ -149,3 +161,37 @@ ggplot(my_favs_fav_tweeters) +
 
 I’m going to go ahead and follow anyone on this list who I’m not already
 following.
+
+Let’s see which words show up most often in tweets that I have
+favorited.
+
+``` r
+remove_reg <- "&amp;|&lt;|&gt;"
+tidy_james_favs <- james %>%
+        filter(!str_detect(text, "^RT")) %>%
+        mutate(text = str_remove_all(text, remove_reg)) %>%
+        unnest_tokens(word, text, token = "tweets") %>%
+        filter(
+                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+                str_detect(word, "[a-z]")
+        )
+```
+
+    ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
+
+``` r
+word_count <- tidy_james_favs %>%
+        filter(!str_detect(word, "^@")) %>%
+        count(word) %>%
+        arrange(desc(n)) %>%
+        slice(1:20)
+
+ggplot(word_count) +
+        geom_col(mapping = aes(reorder(word, n), n)) +
+        coord_flip() +
+        labs(title = "My Favorite Words",
+             x = "Word",
+             y = "Number of Occurences")
+```
+
+![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
