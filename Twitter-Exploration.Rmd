@@ -84,6 +84,8 @@ word_count <- tidy_james_favs %>%
         filter(!str_detect(word, "^@")) %>%
         count(word) %>%
         arrange(desc(n)) %>%
+        #"people" shoes up way to often and doesn't tell us much
+        filter(word != "people") %>%
         slice(1:20)
 
 ggplot(word_count) +
@@ -92,5 +94,44 @@ ggplot(word_count) +
         labs(title = "My Favorite Words",
              x = "Word",
              y = "Number of Occurences")
+```
+
+I guess I'm interested in Left politics and the uprising against racist police violence.
+
+Let's see what words my favorites are favoriting.
+
+```{r}
+
+tidy_favs_favs <- my_favs_favs %>%
+        filter(!str_detect(text, "^RT")) %>%
+        mutate(text = str_remove_all(text, remove_reg)) %>%
+        unnest_tokens(word, text, token = "tweets") %>%
+        filter(
+                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+                str_detect(word, "[a-z]")
+        )
+
+favs_word_count <- tidy_favs_favs %>%
+        filter(!str_detect(word, "^@")) %>%
+        count(word) %>%
+        arrange(desc(n)) %>%
+        #"people" shoes up way to often and doesn't tell us much
+        filter(word != "people") %>%
+        slice(1:20)
+
+ggplot(favs_word_count) +
+        geom_col(mapping = aes(reorder(word, n), n)) +
+        coord_flip() +
+        labs(title = "My Favorites' Favorite Words",
+             x = "Word",
+             y = "Number of Occurences")
+```
+
+A lot of overalap, but they seem more interested in that whole cancel culture letter than I am.
+
+Now let's take a look at the words that I use in my own tweets.
+
+```{r}
+
 ```
 
