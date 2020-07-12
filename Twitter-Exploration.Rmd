@@ -26,15 +26,9 @@ I wonder who my favorite tweeters are.
 james <- read_csv("data/james.csv")
 
 my_fav_tweeters <- james %>%
-        count(screen_name, sort = TRUE) %>%
-        slice(1:10)
+        count(screen_name, sort = TRUE)
 
-ggplot(my_fav_tweeters) +
-        geom_col(mapping = aes(reorder(screen_name, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Tweeters",
-             x = "Screen Name",
-             y = "Number of Favorites")
+head(my_fav_tweeters, 10)
 ```
 
 I wonder who their favorites are.
@@ -49,15 +43,9 @@ I wonder who their favorites are.
 my_favs_favs <- read_csv("data/my_favs_favs.csv")
 
 my_favs_fav_tweeters <- my_favs_favs %>%
-        count(screen_name, sort = TRUE) %>%
-        slice(1:10)
+        count(screen_name, sort = TRUE)
 
-ggplot(my_favs_fav_tweeters) +
-        geom_col(mapping = aes(reorder(screen_name, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Tweeters' Favorite Tweeters",
-             x = "Screen Name",
-             y = "Number of Favorites")
+head(my_favs_fav_tweeters, 10)
 ```
 
 I'm going to go ahead and follow anyone on this list who I'm not already following.
@@ -80,15 +68,9 @@ word_count <- tidy_james_favs %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Words",
-             x = "Word",
-             y = "Number of Occurences")
+head(word_count, 20)
 ```
 
 I guess I'm interested in Left politics and the uprising against racist police violence.
@@ -110,15 +92,9 @@ favs_word_count <- tidy_favs_favs %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(favs_word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorites' Favorite Words",
-             x = "Word",
-             y = "Number of Occurences")
+head(favs_word_count, 20)
 ```
 
 A lot of overalap, but they seem more interested in that whole cancel culture letter than I am.
@@ -143,16 +119,9 @@ tweets_word_count <- tidy_james_tweets %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(tweets_word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Most Commonly Used Words",
-             x = "Word",
-             y = "Number of Occurences")
-
+head(tweets_word_count, 20)
 
 ```
 

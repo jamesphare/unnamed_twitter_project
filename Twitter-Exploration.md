@@ -84,18 +84,32 @@ james <- read_csv("data/james.csv")
 
 ``` r
 my_fav_tweeters <- james %>%
-        count(screen_name, sort = TRUE) %>%
-        slice(1:10)
+        count(screen_name, sort = TRUE)
 
-ggplot(my_fav_tweeters) +
-        geom_col(mapping = aes(reorder(screen_name, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Tweeters",
-             x = "Screen Name",
-             y = "Number of Favorites")
+head(my_fav_tweeters, 10)
 ```
 
-![](Twitter-Exploration_files/figure-gfm/favorites-1.png)<!-- -->
+    ## Warning: `...` is not empty.
+    ## 
+    ## We detected these problematic arguments:
+    ## * `needs_dots`
+    ## 
+    ## These dots only exist to allow future extensions and should be empty.
+    ## Did you misspecify an argument?
+
+    ## # A tibble: 10 x 2
+    ##    screen_name         n
+    ##    <chr>           <int>
+    ##  1 akbarjenkins      223
+    ##  2 kevinbaker        159
+    ##  3 sarahljaffe       153
+    ##  4 UrsulaLawrence     96
+    ##  5 PatBlanchfield     87
+    ##  6 WaywardWinifred    76
+    ##  7 StephenMolldrem    70
+    ##  8 KateAronoff        57
+    ##  9 JoelBordeaux       52
+    ## 10 socialistdogmom    48
 
 I wonder who their favorites are.
 
@@ -142,18 +156,32 @@ my_favs_favs <- read_csv("data/my_favs_favs.csv")
 
 ``` r
 my_favs_fav_tweeters <- my_favs_favs %>%
-        count(screen_name, sort = TRUE) %>%
-        slice(1:10)
+        count(screen_name, sort = TRUE)
 
-ggplot(my_favs_fav_tweeters) +
-        geom_col(mapping = aes(reorder(screen_name, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Tweeters' Favorite Tweeters",
-             x = "Screen Name",
-             y = "Number of Favorites")
+head(my_favs_fav_tweeters, 10)
 ```
 
-![](Twitter-Exploration_files/figure-gfm/favs_favorites-1.png)<!-- -->
+    ## Warning: `...` is not empty.
+    ## 
+    ## We detected these problematic arguments:
+    ## * `needs_dots`
+    ## 
+    ## These dots only exist to allow future extensions and should be empty.
+    ## Did you misspecify an argument?
+
+    ## # A tibble: 10 x 2
+    ##    screen_name         n
+    ##    <chr>           <int>
+    ##  1 WaywardWinifred    82
+    ##  2 cushbomb           36
+    ##  3 re_colston         26
+    ##  4 triofrancos        23
+    ##  5 BrandyLJensen      18
+    ##  6 BigMeanInternet    17
+    ##  7 tgracchus1848      17
+    ##  8 onesarahjones      16
+    ##  9 AyoCaesar          14
+    ## 10 melissagira        14
 
 I’m going to go ahead and follow anyone on this list who I’m not already
 following.
@@ -180,18 +208,42 @@ word_count <- tidy_james_favs %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorite Words",
-             x = "Word",
-             y = "Number of Occurences")
+head(word_count, 20)
 ```
 
-![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-1-1.png)<!-- -->
+    ## Warning: `...` is not empty.
+    ## 
+    ## We detected these problematic arguments:
+    ## * `needs_dots`
+    ## 
+    ## These dots only exist to allow future extensions and should be empty.
+    ## Did you misspecify an argument?
+
+    ## # A tibble: 20 x 2
+    ##    word        n
+    ##    <chr>   <int>
+    ##  1 police    161
+    ##  2 time      128
+    ##  3 black     115
+    ##  4 white      99
+    ##  5 day        89
+    ##  6 trump      78
+    ##  7 bernie     75
+    ##  8 fucking    75
+    ##  9 bad        63
+    ## 10 love       63
+    ## 11 biden      62
+    ## 12 shit       58
+    ## 13 cops       57
+    ## 14 life       56
+    ## 15 racist     56
+    ## 16 read       54
+    ## 17 vote       53
+    ## 18 lives      51
+    ## 19 left       49
+    ## 20 real       49
 
 I guess I’m interested in Left politics and the uprising against racist
 police violence.
@@ -216,18 +268,42 @@ favs_word_count <- tidy_favs_favs %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(favs_word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Favorites' Favorite Words",
-             x = "Word",
-             y = "Number of Occurences")
+head(favs_word_count, 20)
 ```
 
-![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-2-1.png)<!-- -->
+    ## Warning: `...` is not empty.
+    ## 
+    ## We detected these problematic arguments:
+    ## * `needs_dots`
+    ## 
+    ## These dots only exist to allow future extensions and should be empty.
+    ## Did you misspecify an argument?
+
+    ## # A tibble: 20 x 2
+    ##    word        n
+    ##    <chr>   <int>
+    ##  1 time      119
+    ##  2 black      99
+    ##  3 love       88
+    ##  4 cancel     73
+    ##  5 letter     72
+    ##  6 culture    70
+    ##  7 day        68
+    ##  8 white      68
+    ##  9 read       64
+    ## 10 life       63
+    ## 11 police     63
+    ## 12 climate    62
+    ## 13 history    58
+    ## 14 bad        57
+    ## 15 trump      57
+    ## 16 lot        54
+    ## 17 real       54
+    ## 18 feel       49
+    ## 19 fuck       49
+    ## 20 book       47
 
 A lot of overalap, but they seem more interested in that whole cancel
 culture letter than I am.
@@ -286,15 +362,39 @@ tweets_word_count <- tidy_james_tweets %>%
         filter(!str_detect(word, "^@")) %>%
         count(word, sort = TRUE) %>%
         #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people") %>%
-        slice(1:20)
+        filter(word != "people")
 
-ggplot(tweets_word_count) +
-        geom_col(mapping = aes(reorder(word, n), n)) +
-        coord_flip() +
-        labs(title = "My Most Commonly Used Words",
-             x = "Word",
-             y = "Number of Occurences")
+head(tweets_word_count, 20)
 ```
 
-![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+    ## Warning: `...` is not empty.
+    ## 
+    ## We detected these problematic arguments:
+    ## * `needs_dots`
+    ## 
+    ## These dots only exist to allow future extensions and should be empty.
+    ## Did you misspecify an argument?
+
+    ## # A tibble: 20 x 2
+    ##    word           n
+    ##    <chr>      <int>
+    ##  1 day           33
+    ##  2 trump         25
+    ##  3 bernie        19
+    ##  4 time          19
+    ##  5 bush          15
+    ##  6 hard          14
+    ##  7 worse         14
+    ##  8 care          12
+    ##  9 president     12
+    ## 10 read          12
+    ## 11 twitter       12
+    ## 12 vote          12
+    ## 13 real          11
+    ## 14 social        11
+    ## 15 guess         10
+    ## 16 lot           10
+    ## 17 post          10
+    ## 18 pretty        10
+    ## 19 book           9
+    ## 20 democratic     9
