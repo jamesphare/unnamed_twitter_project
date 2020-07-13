@@ -198,7 +198,7 @@ tidy_james_favs <- james %>%
 word_count <- tidy_james_favs %>%
   filter(!str_detect(word, "^@")) %>%
   count(word, sort = TRUE) %>%
-  #"people" shoes up way to often and doesn't tell us much
+  #"people" shows up way to often and doesn't tell us much
   filter(word != "people")
 
 head(word_count, 20)
@@ -251,7 +251,7 @@ tidy_favs_favs <- my_favs_favs %>%
 favs_word_count <- tidy_favs_favs %>%
   filter(!str_detect(word, "^@")) %>%
   count(word, sort = TRUE) %>%
-  #"people" shoes up way to often and doesn't tell us much
+  #"people" shows up way to often and doesn't tell us much
   filter(word != "people")
 
 head(favs_word_count, 20)
@@ -339,7 +339,7 @@ tidy_james_tweets <- james_tweets %>%
 tweets_word_count <- tidy_james_tweets %>%
   filter(!str_detect(word, "^@")) %>%
   count(word, sort = TRUE) %>%
-  #"people" shoes up way to often and doesn't tell us much
+  #"people" shows up way to often and doesn't tell us much
   filter(word != "people")
 
 head(tweets_word_count, 20)
@@ -390,9 +390,6 @@ ggplot(my_twitter_sentiment, aes(date, sentiment)) +
 tweets_word_count %>%
   with(wordcloud(word, n, max.words = 90))
 ```
-
-    ## Warning in wordcloud(word, n, max.words = 90): day could not be fit on page. It
-    ## will not be plotted.
 
 ![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
