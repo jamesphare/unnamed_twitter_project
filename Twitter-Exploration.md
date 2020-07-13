@@ -42,6 +42,12 @@ library(lubridate)
     ## 
     ##     date, intersect, setdiff, union
 
+``` r
+library(wordcloud)
+```
+
+    ## Loading required package: RColorBrewer
+
 I wonder who my favorite tweeters are.
 
 ``` r
@@ -379,6 +385,13 @@ ggplot(my_twitter_sentiment, aes(date, sentiment)) +
 ```
 
 ![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+``` r
+tweets_word_count %>%
+  with(wordcloud(word, n, max.words = 90))
+```
+
+![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 I was not happy on the days when Bernie dropped out or when Kemp
 announced that bowling alleys could re-open.

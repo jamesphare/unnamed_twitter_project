@@ -12,6 +12,7 @@ library(tidyverse)
 library(rtweet)
 library(tidytext)
 library(lubridate)
+library(wordcloud)
 ```
 
 I wonder who my favorite tweeters are.
@@ -135,6 +136,9 @@ my_twitter_sentiment <- tidy_james_tweets %>%
 
 ggplot(my_twitter_sentiment, aes(date, sentiment)) +
   geom_col(show.legend = FALSE)
+
+tweets_word_count %>%
+  with(wordcloud(word, n, max.words = 90))
 ```
 
 I was not happy on the days when Bernie dropped out or when Kemp announced that bowling alleys could re-open.
