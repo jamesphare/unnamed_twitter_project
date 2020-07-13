@@ -391,6 +391,9 @@ tweets_word_count %>%
   with(wordcloud(word, n, max.words = 90))
 ```
 
+    ## Warning in wordcloud(word, n, max.words = 90): day could not be fit on page. It
+    ## will not be plotted.
+
 ![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
 
 I was not happy on the days when Bernie dropped out or when Kemp

@@ -142,3 +142,5 @@ tweets_word_count %>%
 ```
 
 I was not happy on the days when Bernie dropped out or when Kemp announced that bowling alleys could re-open.
+
+
