@@ -84,7 +84,7 @@ james <- read_csv("data/james.csv")
 
 ``` r
 my_fav_tweeters <- james %>%
-        count(screen_name, sort = TRUE)
+  count(screen_name, sort = TRUE)
 
 head(my_fav_tweeters, 10)
 ```
@@ -148,7 +148,7 @@ my_favs_favs <- read_csv("data/my_favs_favs.csv")
 
 ``` r
 my_favs_fav_tweeters <- my_favs_favs %>%
-        count(screen_name, sort = TRUE)
+  count(screen_name, sort = TRUE)
 
 head(my_favs_fav_tweeters, 10)
 ```
@@ -176,23 +176,24 @@ favorited.
 ``` r
 remove_reg <- "&amp;|&lt;|&gt;"
 tidy_james_favs <- james %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,
+    !word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 ```
 
     ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
 
 ``` r
 word_count <- tidy_james_favs %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(word_count, 20)
 ```
@@ -228,23 +229,24 @@ Let’s see what words my favorites are favoriting.
 
 ``` r
 tidy_favs_favs <- my_favs_favs %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,
+    !word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 ```
 
     ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
 
 ``` r
 favs_word_count <- tidy_favs_favs %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(favs_word_count, 20)
 ```
@@ -314,23 +316,25 @@ james_tweets <- read_csv("data/james_tweets.csv")
 
 ``` r
 tidy_james_tweets <- james_tweets %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  mutate(tweet = nrow(james_tweets):1,
+         date = as_date(created_at)) %>%
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 ```
 
     ## Using `to_lower = TRUE` with `token = 'tweets'` may not preserve URLs.
 
 ``` r
 tweets_word_count <- tidy_james_tweets %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(tweets_word_count, 20)
 ```
@@ -358,3 +362,23 @@ head(tweets_word_count, 20)
     ## 18 pretty        10
     ## 19 book           9
     ## 20 democratic     9
+
+``` r
+my_twitter_sentiment <- tidy_james_tweets %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(date, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+```
+
+    ## Joining, by = "word"
+
+``` r
+ggplot(my_twitter_sentiment, aes(date, sentiment)) +
+  geom_col(show.legend = FALSE)
+```
+
+![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-1.png)<!-- -->
+
+I was not happy on the days when Bernie dropped out or when Kemp
+announced that bowling alleys could re-open.

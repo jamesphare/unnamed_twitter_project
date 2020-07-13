@@ -26,7 +26,7 @@ I wonder who my favorite tweeters are.
 james <- read_csv("data/james.csv")
 
 my_fav_tweeters <- james %>%
-        count(screen_name, sort = TRUE)
+  count(screen_name, sort = TRUE)
 
 head(my_fav_tweeters, 10)
 ```
@@ -43,7 +43,7 @@ I wonder who their favorites are.
 my_favs_favs <- read_csv("data/my_favs_favs.csv")
 
 my_favs_fav_tweeters <- my_favs_favs %>%
-        count(screen_name, sort = TRUE)
+  count(screen_name, sort = TRUE)
 
 head(my_favs_fav_tweeters, 10)
 ```
@@ -56,19 +56,20 @@ Let's see which words show up most often in tweets that I have favorited.
 
 remove_reg <- "&amp;|&lt;|&gt;"
 tidy_james_favs <- james %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,
+    !word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 
 word_count <- tidy_james_favs %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(word_count, 20)
 ```
@@ -80,19 +81,20 @@ Let's see what words my favorites are favoriting.
 ```{r}
 
 tidy_favs_favs <- my_favs_favs %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,
+    !word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 
 favs_word_count <- tidy_favs_favs %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(favs_word_count, 20)
 ```
@@ -107,21 +109,32 @@ Now let's take a look at the words that I use in my own tweets.
 james_tweets <- read_csv("data/james_tweets.csv")
 
 tidy_james_tweets <- james_tweets %>%
-        filter(!str_detect(text, "^RT")) %>%
-        mutate(text = str_remove_all(text, remove_reg)) %>%
-        unnest_tokens(word, text, token = "tweets") %>%
-        filter(
-                !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
-                str_detect(word, "[a-z]")
-        )
+  mutate(tweet = nrow(james_tweets):1,
+         date = as_date(created_at)) %>%
+  filter(!str_detect(text, "^RT")) %>%
+  mutate(text = str_remove_all(text, remove_reg)) %>%
+  unnest_tokens(word, text, token = "tweets") %>%
+  filter(
+    !word %in% stop_words$word,!word %in% str_remove_all(stop_words$word, "'"),
+    str_detect(word, "[a-z]")
+  )
 
 tweets_word_count <- tidy_james_tweets %>%
-        filter(!str_detect(word, "^@")) %>%
-        count(word, sort = TRUE) %>%
-        #"people" shoes up way to often and doesn't tell us much
-        filter(word != "people")
+  filter(!str_detect(word, "^@")) %>%
+  count(word, sort = TRUE) %>%
+  #"people" shoes up way to often and doesn't tell us much
+  filter(word != "people")
 
 head(tweets_word_count, 20)
 
+my_twitter_sentiment <- tidy_james_tweets %>%
+  inner_join(get_sentiments("bing")) %>%
+  count(date, sentiment) %>%
+  spread(sentiment, n, fill = 0) %>%
+  mutate(sentiment = positive - negative)
+
+ggplot(my_twitter_sentiment, aes(date, sentiment)) +
+  geom_col(show.legend = FALSE)
 ```
 
+I was not happy on the days when Bernie dropped out or when Kemp announced that bowling alleys could re-open.
