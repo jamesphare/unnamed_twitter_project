@@ -13,6 +13,7 @@ library(rtweet)
 library(tidytext)
 library(lubridate)
 library(wordcloud)
+set.seed(4321)
 ```
 
 I wonder who my favorite tweeters are.
@@ -123,8 +124,9 @@ tidy_james_tweets <- james_tweets %>%
 tweets_word_count <- tidy_james_tweets %>%
   filter(!str_detect(word, "^@")) %>%
   count(word, sort = TRUE) %>%
-  #"people" shows up way to often and doesn't tell us much
-  filter(word != "people")
+  #"people" and "day" show up way to often and don't tell us much
+  filter(word != "people",
+         word != "day")
 
 head(tweets_word_count, 20)
 
@@ -138,7 +140,7 @@ ggplot(my_twitter_sentiment, aes(date, sentiment)) +
   geom_col(show.legend = FALSE)
 
 tweets_word_count %>%
-  with(wordcloud(word, n, max.words = 90))
+  with(wordcloud(word, n, scale = c(2, .2), min.freq = 3, random.order = FALSE))
 ```
 
 I was not happy on the days when Bernie dropped out or when Kemp announced that bowling alleys could re-open.

@@ -48,6 +48,10 @@ library(wordcloud)
 
     ## Loading required package: RColorBrewer
 
+``` r
+set.seed(4321)
+```
+
 I wonder who my favorite tweeters are.
 
 ``` r
@@ -339,8 +343,9 @@ tidy_james_tweets <- james_tweets %>%
 tweets_word_count <- tidy_james_tweets %>%
   filter(!str_detect(word, "^@")) %>%
   count(word, sort = TRUE) %>%
-  #"people" shows up way to often and doesn't tell us much
-  filter(word != "people")
+  #"people" and "day" show up way to often and don't tell us much
+  filter(word != "people",
+         word != "day")
 
 head(tweets_word_count, 20)
 ```
@@ -348,26 +353,26 @@ head(tweets_word_count, 20)
     ## # A tibble: 20 x 2
     ##    word           n
     ##    <chr>      <int>
-    ##  1 day           33
-    ##  2 trump         25
-    ##  3 bernie        19
-    ##  4 time          19
-    ##  5 bush          15
-    ##  6 hard          14
-    ##  7 worse         14
-    ##  8 care          12
-    ##  9 president     12
-    ## 10 read          12
-    ## 11 twitter       12
-    ## 12 vote          12
-    ## 13 real          11
-    ## 14 social        11
-    ## 15 guess         10
-    ## 16 lot           10
-    ## 17 post          10
-    ## 18 pretty        10
-    ## 19 book           9
-    ## 20 democratic     9
+    ##  1 trump         25
+    ##  2 bernie        19
+    ##  3 time          19
+    ##  4 bush          15
+    ##  5 hard          14
+    ##  6 worse         14
+    ##  7 care          12
+    ##  8 president     12
+    ##  9 read          12
+    ## 10 twitter       12
+    ## 11 vote          12
+    ## 12 real          11
+    ## 13 social        11
+    ## 14 guess         10
+    ## 15 lot           10
+    ## 16 post          10
+    ## 17 pretty        10
+    ## 18 book           9
+    ## 19 democratic     9
+    ## 20 gender         9
 
 ``` r
 my_twitter_sentiment <- tidy_james_tweets %>%
@@ -388,7 +393,7 @@ ggplot(my_twitter_sentiment, aes(date, sentiment)) +
 
 ``` r
 tweets_word_count %>%
-  with(wordcloud(word, n, max.words = 90))
+  with(wordcloud(word, n, scale = c(2, .2), min.freq = 3, random.order = FALSE))
 ```
 
 ![](Twitter-Exploration_files/figure-gfm/unnamed-chunk-3-2.png)<!-- -->
